@@ -1,0 +1,12 @@
+# Asset files should be treated by git as binary
+*.png binary
+*.jpg binary
+*.ttf binary
+*.mp3 binary
+*.wav binary
+*.raw binary
+*.obj binary
+*.gltf binary
+
+# Declare files that will always have CRLF line endings on checkout.
+*.sln text eol=lf
