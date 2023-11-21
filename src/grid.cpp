@@ -2,6 +2,7 @@
 // Created by dan10 on 19.11.2023.
 //
 #include "grid.h"
+#include "colors.h"
 #include <iostream>
 
 Grid::Grid(const int ROWS, const int COLUMNS, const int CELLSIZE) {
@@ -51,25 +52,81 @@ void Grid::Draw()
         {
             int cellValue = grid[y][x];
 
-            int cellX = x * cellSize + 1;
-            int cellY = y * cellSize + 1;
+            int cellX = x * cellSize + 10;
+            int cellY = y * cellSize + 10;
             DrawRectangle(cellX, cellY, cellSize-1, cellSize-1, colors[cellValue]);
         }
     }
 }
 
-std::vector<Color> Grid::GetCellColors()
+int Grid::ClearFullRows()
 {
-    Color darkGrey = {26, 31, 40, 255};
-    Color green = {47, 230, 23, 255};
-    Color red = {232, 18, 18, 255};
-    Color orange = {226, 116, 17, 255};
-    Color yellow = {237, 234, 4, 255};
-    Color purple = {166, 0, 247, 255};
-    Color cyan = {21, 204, 209, 255};
-    Color blue = {13, 64, 216, 255};
+    int completedRows = 0;
 
-    return {darkGrey, green, red, orange, yellow, purple, cyan, blue};
+    for(int y = rows-1; y >= 0; y--)
+    {
+        if(IsRowFull(y))
+        {
+            ClearRow(y);
+            completedRows++;
+        }
+        else if(completedRows > 0) {
+            MoveRowDown(y, completedRows);
+        }
+    }
+
+    return completedRows;
+}
+
+bool Grid::IsCellOutside(int row, int column)
+{
+    bool insideRows = row >= 0 && row < rows;
+    bool insideColumns = column >= 0 && column < columns;
+
+    if(insideRows && insideColumns) {
+        return false;
+    }
+
+    return true;
+}
+
+bool Grid::IsCellEmpty(int row, int column)
+{
+    if(grid[row][column] == 0) {
+        return true;
+    }
+
+    return false;
+}
+
+bool Grid::IsRowFull(int row)
+{
+    for(int x = 0; x < columns; x++)
+    {
+        if(grid[row][x] == 0)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void Grid::ClearRow(int row)
+{
+    for(int x = 0; x < columns; x++)
+    {
+        grid[row][x] = 0;
+    }
+}
+
+void Grid::MoveRowDown(int row, int rowsDown)
+{
+    for(int x = 0; x < columns; x++)
+    {
+        grid[row + rowsDown][x] = grid[row][x];
+        grid[row][x] = 0;
+    }
 }
 
 void Grid::SetCellValue(const int X, const int Y, const int CELLVALUE) {

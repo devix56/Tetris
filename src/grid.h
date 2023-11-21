@@ -17,16 +17,23 @@ private:
 
     std::vector<Color> colors;
 
+    bool IsRowFull(int row);
+    void ClearRow(int row);
+    void MoveRowDown(int row, int rowsDown);
+
 public:
-    Grid() = delete;
+    Grid() = default;
     Grid(int ROWS, int COLUMNS, int CELLSIZE);
     ~Grid() = default;
 
     void Initialize();
     void Print();
     void Draw();
+    int ClearFullRows();
 
-    std::vector<Color> GetCellColors();
+    bool IsCellOutside(int row, int column);
+    bool IsCellEmpty(int row, int column);
+
     void SetCellValue(const int X, const int Y, const int CELLVALUE);
 
 };
