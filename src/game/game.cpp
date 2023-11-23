@@ -5,14 +5,13 @@
 #include "game.h"
 
 #include <random>
-#include <iostream>
 
 
 const int ROWS = 20;
 const int COLUMNS = 10;
 const int CELLSIZE = 30;
 
-Game::Game()
+Game::Game(MusicHandler* musicHandler)
 {
     grid = Grid(ROWS, COLUMNS, CELLSIZE);
     blocks = GetAllBlocks();
@@ -21,25 +20,12 @@ Game::Game()
     isGameOver = false;
     score = 0;
 
-    // Initialize music & sounds
-    InitAudioDevice();
-    backgroundMusic = LoadMusicStream("../assets/sounds/music.mp3");
-    PlayMusicStream(backgroundMusic);
-    rotateSound = LoadSound("../assets/sounds/rotate.mp3");
-    clearSound = LoadSound("../assets/sounds/clear.mp3");
-
-}
-
-Game::~Game()
-{
-    UnloadSound(rotateSound);
-    UnloadSound(clearSound);
-    UnloadMusicStream(backgroundMusic);
-    CloseAudioDevice();
+    this->musicHandler = musicHandler;
 }
 
 void Game::Draw()
 {
+
     grid.Draw();
     currentBlock.Draw(11, 11);
 
@@ -84,6 +70,8 @@ void Game::HandleInput()
 
         case KEY_UP:
             RotateBlock();
+            break;
+        default:
             break;
     }
 
@@ -173,7 +161,7 @@ void Game::LockBlock()
     int rowsCleared = grid.ClearFullRows();
     if(rowsCleared > 0)
     {
-        PlaySound(clearSound);
+        musicHandler->PlayClearSound();
         UpdateScore(rowsCleared, 0);
     }
 }
@@ -206,7 +194,7 @@ void Game::RotateBlock()
 
         else
         {
-            PlaySound(rotateSound);
+            musicHandler->PlayRotateSound();
         }
 
     }
@@ -223,7 +211,7 @@ bool Game::IsBlockOutside()
     return false;
 }
 
-bool Game::IsGameOver()
+bool Game::IsGameOver() const
 {
     return this->isGameOver;
 }
@@ -240,16 +228,11 @@ Block Game::GetRandomBlock()
     return block;
 }
 
-int Game::GetScore()
+int Game::GetScore() const
 {
     return this->score;
 }
 
 std::vector<Block> Game::GetAllBlocks() {
     return {IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()};
-}
-
-Music Game::GetBackgroundMusic()
-{
-    return this->backgroundMusic;
 }

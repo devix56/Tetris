@@ -2,7 +2,7 @@
 // Created by dalacroi on 21.11.2023.
 //
 #include "block.h"
-#include "position.h"
+#include "../util/position.h"
 
 class LBlock : public Block {
 

@@ -4,38 +4,36 @@
 
 #pragma once
 
-#include "grid.h"
-#include "blocks.cpp"
-
-
+#include "../grid/grid.h"
+#include "../block/blocks.cpp"
+#include "../resourcehandling/musichandler.h"
 
 class Game {
 
 private:
-    Grid grid;
 
+    // Game attributes
+    Grid grid;
     std::vector<Block> blocks;
     Block currentBlock, nextBlock;
     bool isGameOver;
     int score;
 
-    // Music Handling
-    Music backgroundMusic;
-    Sound rotateSound;
-    Sound clearSound;
+    // Resources
+    MusicHandler* musicHandler;
 
     // Input Handling
     void MoveBlockLeft();
     void MoveBlockRight();
-    void LockBlock();
 
+    // Game Logic
+    void LockBlock();
     void RotateBlock();
     bool BlockFits();
     void UpdateScore(int linesCleared, int moveDownPoints);
 
 public:
-    Game();
-    ~Game();
+    Game(MusicHandler* musicHandler);
 
     // Game Handling
     void Draw();
@@ -47,11 +45,10 @@ public:
 
     // Game Logic Checks
     bool IsBlockOutside();
-    bool IsGameOver();
+    bool IsGameOver() const;
 
     // Getters & Setters
     Block GetRandomBlock();
-    std::vector<Block> GetAllBlocks();
-    int GetScore();
-    Music GetBackgroundMusic();
+    static std::vector<Block> GetAllBlocks();
+    int GetScore() const;
 };

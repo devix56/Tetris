@@ -6,8 +6,8 @@
 #include <vector>
 #include <map>
 
-#include "position.h"
-#include "colors.h"
+#include "../util/position.h"
+#include "../util/colors.h"
 
 class Block {
 
