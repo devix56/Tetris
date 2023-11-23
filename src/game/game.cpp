@@ -25,23 +25,8 @@ Game::Game(MusicHandler* musicHandler)
 
 void Game::Draw()
 {
-
     grid.Draw();
     currentBlock.Draw(11, 11);
-
-    switch(nextBlock.GetId())
-    {
-        case 3:
-            nextBlock.Draw(255, 290);
-            break;
-        case 4:
-            nextBlock.Draw(255, 280);
-            break;
-        default:
-            nextBlock.Draw(270, 270);
-            break;
-    }
-
 }
 
 void Game::HandleInput()
@@ -235,4 +220,9 @@ int Game::GetScore() const
 
 std::vector<Block> Game::GetAllBlocks() {
     return {IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()};
+}
+
+Block& Game::GetNextBlock()
+{
+    return nextBlock;
 }

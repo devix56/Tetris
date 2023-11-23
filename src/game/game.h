@@ -51,4 +51,6 @@ public:
     Block GetRandomBlock();
     static std::vector<Block> GetAllBlocks();
     int GetScore() const;
+
+    Block &GetNextBlock();
 };
