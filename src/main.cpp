@@ -5,11 +5,13 @@
 #include "game/game.h"
 #include "util/colors.h"
 #include "resourcehandling/fontshandler.h"
-#include <iostream>
+#include "game/game_ui.h"
 
 // Handlers
 MusicHandler* musicHandler;
 FontsHandler* fontsHandler;
+Game* game;
+GameUI* gameUI;
 
 // Event Triggers
 double lastUpdateTime = 0;
@@ -33,33 +35,6 @@ void SetupWindow()
 }
 
 
-void DrawUI(Game* game, FontsHandler* fontsHandler) {
-
-    Font mongram = fontsHandler->GetFontByName("Monogram");
-    if(IsFontReady(mongram))
-    {
-        // Draw Score
-        DrawTextEx(mongram, "Score", {350, 15}, 38, 2, WHITE);
-        DrawRectangleRounded({320, 55, 170, 60}, 0.3, 6, lightBlue);
-        char scoreText[10];
-        sprintf(scoreText, "%d", game->GetScore());
-        Vector2 textSize = MeasureTextEx(mongram, scoreText, 38, 2);
-        DrawTextEx(mongram, scoreText, {320 + (170-textSize.x) / 2, 65}, 38, 2, WHITE);
-
-        // Draw next block preview
-        DrawTextEx(mongram, "Next", {365, 175}, 38, 2, WHITE);
-        DrawRectangleRounded({320, 215, 170, 180}, 0.3, 6, lightBlue);
-
-
-        // Draw game over
-        if(game->IsGameOver()) {
-            DrawTextEx(mongram, "GAME OVER", {320, 450}, 28, 2, WHITE);
-        }
-    }
-
-
-}
-
 /**
  * MAIN
  */
@@ -69,7 +44,8 @@ int main()
     musicHandler = new MusicHandler();
     fontsHandler = new FontsHandler();
 
-    Game* game = new Game(musicHandler);
+    game = new Game(musicHandler);
+    gameUI = new GameUI(game, fontsHandler);
 
     // Game loop
     while (!WindowShouldClose())
@@ -86,7 +62,7 @@ int main()
         // Draw game UI
         BeginDrawing();
             ClearBackground(DARKBLUE);
-            DrawUI(game, fontsHandler);
+            gameUI->DrawUI();
             game->Draw();
         EndDrawing();
     }
@@ -95,6 +71,7 @@ int main()
     delete musicHandler;
     delete fontsHandler;
     delete game;
+    delete gameUI;
 
     CloseWindow();
 
