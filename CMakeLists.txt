@@ -1,9 +1,13 @@
 # Project setup
 cmake_minimum_required(VERSION 3.20.4)
 project(SimpleTetris CXX)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 ## Code properties/flags
+    # Build
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebug$<$<CONFIG:Debug>:Debug>")
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Release>:Release>")
+
     # Debugging
     define_property(GLOBAL PROPERTY DEBUG_LOGGING)
     set_property(GLOBAL PROPERTY DEBUG_LOGGING FALSE)
@@ -14,19 +18,20 @@ set(CMAKE_CXX_STANDARD 14)
     find_library(raylib libs/raylib)
 
 ## Source files
-set(SOURCE_FILES
-        src/main.cpp
-        src/grid/grid.h src/grid/grid.cpp
-        src/block/block.h src/block/block.cpp src/block/blocks.cpp
-        src/util/position.h src/util/position.cpp
-        src/util/colors.h src/util/colors.cpp
-        src/game/game.cpp src/game/game.h
-        src/game/game_ui.cpp src/game/game_ui.h
-        src/resourcehandling/fontshandler.cpp src/resourcehandling/fontshandler.h
-        src/resourcehandling/musichandler.cpp src/resourcehandling/musichandler.h
-)
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp") # SOURCE_FILES is a list of all .cpp files
 
-# Compile files
+# Link source files to executable
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_link_libraries(${PROJECT_NAME} raylib)
-target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
+
+## Link and compile sources
+    # Link libraries
+    find_library(raylib libs/raylib)
+    target_link_libraries(${PROJECT_NAME} raylib)
+
+    # Link assets
+    target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
+    #target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="./assets/") # Uncomment this line to setup the ASSETS_PATH macro to the final assets directory when you share the game
+
+    # Link sources files
+    target_sources("${CMAKE_PROJECT_NAME}" PRIVATE ${SOURCE_FILES})
+    target_include_directories("${CMAKE_PROJECT_NAME}" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src/")
