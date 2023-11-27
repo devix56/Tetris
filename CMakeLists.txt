@@ -4,9 +4,6 @@ project(SimpleTetris CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 ## Code properties/flags
-    # Build
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebug$<$<CONFIG:Debug>:Debug>")
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Release>:Release>")
 
     # Debugging
     define_property(GLOBAL PROPERTY DEBUG_LOGGING)
@@ -24,6 +21,10 @@ file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/sr
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 ## Link and compile sources
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        target_link_options(${PROJECT_NAME} PRIVATE -mwindows) # Hide console on Release
+    endif()
+
     # Link libraries
     find_library(raylib libs/raylib)
     target_link_libraries(${PROJECT_NAME} raylib)
