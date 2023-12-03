@@ -1,20 +1,89 @@
+#
+# Project setup
+#
 cmake_minimum_required(VERSION 3.20.4)
-project(Tetris CXX)
+project(SimpleTetris
+        VERSION 0.1
+        LANGUAGES CXX C)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_CXX_STANDARD 14)
+#
+# Code properties/flags
+#
+# TODO
 
-define_property(GLOBAL
-                PROPERTY DEBUG_LOGGING)
-set_property(GLOBAL
-             PROPERTY DEBUG_LOGGING FALSE)
 
-# Setting parameters for raylib
-set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE) # don't build the supplied examples
-set(BUILD_GAMES    OFF CACHE BOOL "" FORCE) # or games
+#
+# Include source code/assets/libararies to executable
+#
+    # Source code
+    file(GLOB_RECURSE SOURCE_FILES "src/*.cpp" "src/*.h")
 
-add_subdirectory(libs/raylib)
+    # Executable
+    add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
-add_executable(${PROJECT_NAME} src/main.cpp src/grid/grid.h src/grid/grid.cpp src/block/block.h src/util/position.h src/util/position.cpp src/util/colors.h src/util/colors.cpp src/block/block.cpp src/block/blocks.cpp src/game/game.cpp src/game/game.h src/game/game_ui.cpp src/game/game_ui.h src/resourcehandling/fontshandler.cpp src/resourcehandling/fontshandler.h src/resourcehandling/musichandler.cpp src/resourcehandling/musichandler.h)
-target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
-target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/") # Set the asset path macro to the absolute path on the dev machine
-#target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="relative-path-to-assets-in-the-game-package") # Set the asset path macro in release mode
+    # Libraries
+        # raylib
+        find_library(raylib libs/raylib)
+        add_subdirectory(libs/raylib)
+
+        ## rres
+        set(RRES_LIB_PATH)
+        add_library(rres INTERFACE)
+
+        # Link libraries for compilation
+        target_link_libraries(${PROJECT_NAME}
+                raylib
+                rres
+        )
+
+        # Include non-cmake libraries for code
+        target_include_directories(rres INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/libs/rres)
+        target_include_directories(
+                "${CMAKE_PROJECT_NAME}" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src/"
+                "${CMAKE_PROJECT_NAME}" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/assets/"
+        )
+
+    # Assets
+    file(COPY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+#
+# Build flags
+#
+    # Debug build
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+
+        # Logging
+        define_property(GLOBAL PROPERTY DEBUG_LOGGING)
+        set_property(GLOBAL PROPERTY DEBUG_LOGGING TRUE)
+
+    endif()
+
+    # Release build
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+
+        # Hides console
+        target_link_options(${PROJECT_NAME} PRIVATE -mwindows)
+
+    endif()
+
+#
+# Compilation for different platforms
+#
+    # Windows
+    if (WIN32)
+        # do nothing
+    endif ()
+
+    # macOS
+    if (APPLE)
+        target_link_libraries(${PROJECT_NAME} "-framework IOKit")
+        target_link_libraries(${PROJECT_NAME} "-framework Cocoa")
+        target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
+    endif ()
+
+    # Linux
+    if (LINUX)
+        # TODO compile Linux
+    endif ()

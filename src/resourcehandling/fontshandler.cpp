@@ -8,7 +8,7 @@ FontsHandler::FontsHandler()
 {
     // Load all fonts
     fonts = {
-        {"Monogram", LoadFontEx("../assets/fonts/monogram.ttf", 64, 0, 0)},
+        {"Monogram", LoadFontEx("assets/fonts/monogram.ttf", 64, 0, 0)},
     };
 }
 

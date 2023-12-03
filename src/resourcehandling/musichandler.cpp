@@ -30,13 +30,13 @@ MusicHandler::~MusicHandler()
 
 void MusicHandler::LoadMusicTracks()
 {
-    backgroundMusic = LoadMusicStream("../assets/sounds/music.mp3");
+    backgroundMusic = LoadMusicStream("assets/sounds/music.mp3");
 }
 
 void MusicHandler::LoadSounds()
 {
-    rotateSound = LoadSound("../assets/sounds/rotate.mp3");
-    clearSound = LoadSound("../assets/sounds/clear.mp3");
+    rotateSound = LoadSound("assets/sounds/rotate.mp3");
+    clearSound = LoadSound("assets/sounds/clear.mp3");
 }
 
 void MusicHandler::PlayRotateSound()
@@ -63,6 +63,8 @@ void MusicHandler::PlayClearSound()
 
 void MusicHandler::PlayBackgroundMusic()
 {
+    SetMusicVolume(backgroundMusic, 0.1);
+
     if(IsMusicStreamPlaying(backgroundMusic))
     {
         UpdateMusicStream(backgroundMusic);
