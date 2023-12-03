@@ -2,6 +2,7 @@
 // Created by dan10 on 19.11.2023.
 //
 #include "raylib.h"
+#include "raymath.h"
 #include "game/game.h"
 #include "util/colors.h"
 #include "resourcehandling/fontshandler.h"
@@ -15,13 +16,26 @@ GameUI* gameUI;
 
 // Event Triggers
 double lastUpdateTime = 0;
-bool EventTriggered(double interval)
+double currentInterval = 0.6;                       // Time to wait to move block down automatically in seconds
+const int INCREASE_SPEED_INTERVAL = 30;             // Time to wait to increase block fall speed in seconds
+const double MAX_FALL_SPEED = 0.15;                 // Maximum fall speed for the blocks
+bool EventTriggered()
 {
-    double currentTime = GetTime();
+    const bool SHOULD_UPDATE_FALL_SPEED = (int) GetTime() % INCREASE_SPEED_INTERVAL == 0; // Checks if set time has passed to increase block fall speed
+    const double CURRENT_TIME = GetTime();                                                // Current time that has passed since start of the game
 
-    if(currentTime - lastUpdateTime >= interval)
+    const bool HAS_INTERVAL_PASSED = CURRENT_TIME - lastUpdateTime >= currentInterval;    // Checks if enough time has passed to move block down
+    const bool IS_MAX_SPEED_REACHED = currentInterval <= MAX_FALL_SPEED;                  // Checks if the maximum block fall speed has been reached
+
+    if(HAS_INTERVAL_PASSED)
     {
-        lastUpdateTime = currentTime;
+        if (SHOULD_UPDATE_FALL_SPEED && !IS_MAX_SPEED_REACHED)
+        {
+            currentInterval -= 0.05;    // Reduce time (= increase speed) to wait to move block down
+        }
+
+        lastUpdateTime = CURRENT_TIME;  // Save last time the fall speed has been updated
+
         return true;
     }
 
@@ -57,7 +71,11 @@ int main()
 
             // Handle game input
             game->HandleInput();
-            if (EventTriggered(0.4))
+            if (WindowShouldClose()) {
+                break;
+            }
+
+            if (EventTriggered())
             {
                 game->MoveBlockDown();
             }
