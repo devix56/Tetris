@@ -50,21 +50,36 @@ int main()
     // Game loop
     while (!WindowShouldClose())
     {
-        musicHandler->PlayBackgroundMusic();
 
-        // Handle game input
-        game->HandleInput();
-        if(EventTriggered(0.4))
+        if(!game->isGamePaused()) 
         {
-            game->MoveBlockDown();
+            musicHandler->PlayBackgroundMusic();
+
+            // Handle game input
+            game->HandleInput();
+            if (EventTriggered(0.4))
+            {
+                game->MoveBlockDown();
+            }
+
+            // Draw game UI
+            BeginDrawing();
+                ClearBackground(DARKBLUE);
+                gameUI->DrawScore();
+                gameUI->DrawNextBlockPreview();
+                gameUI->DrawGameOverText();
+                game->Draw();
+            EndDrawing();
         }
 
-        // Draw game UI
-        BeginDrawing();
-            ClearBackground(DARKBLUE);
-            gameUI->DrawUI();
-            game->Draw();
-        EndDrawing();
+        else 
+        {   
+            game->HandleInput();
+            BeginDrawing();
+                gameUI->DrawPauseText();
+            EndDrawing();
+        }
+
     }
 
     // Cleanup

@@ -6,13 +6,6 @@ GameUI::GameUI(Game* game, FontsHandler* fontsHandler)
     this->fontsHandler = fontsHandler;
 }
 
-void GameUI::DrawUI()
-{
-    DrawScore();
-    DrawNextBlockPreview();
-    DrawGameOverText();
-}
-
 void GameUI::DrawScore()
 {
     // Get necessary resources
@@ -71,6 +64,19 @@ void GameUI::DrawGameOverText()
         // Draw game over
         if (game->IsGameOver()) {
             DrawTextEx(mongram, "GAME OVER", {320, 450}, 28, 2, WHITE);
+        }
+    }
+}
+
+void GameUI::DrawPauseText()
+{
+    // Get necessary resources
+    Font mongram = fontsHandler->GetFontByName("Monogram");
+    if (IsFontReady(mongram))
+    {
+        // Draw game over
+        if (game->isGamePaused()) {
+            DrawTextEx(mongram, "GAME PAUSED", { 320, 450 }, 28, 2, WHITE);
         }
     }
 }
