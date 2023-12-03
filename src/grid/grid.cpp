@@ -1,6 +1,3 @@
-//
-// Created by dan10 on 19.11.2023.
-//
 #include "grid.h"
 #include "../util/colors.h"
 #include <iostream>

@@ -1,7 +1,3 @@
-//
-// Created by dalacroi on 22.11.2023.
-//
-
 #define DEBUG_LOGGING
 
 #include "musichandler.h"

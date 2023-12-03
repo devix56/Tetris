@@ -1,6 +1,3 @@
-//
-// Created by dalacroi on 21.11.2023.
-//
 #include "colors.h"
 
 const Color darkGrey = {26, 31, 40, 255};

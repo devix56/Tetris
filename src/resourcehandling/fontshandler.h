@@ -1,6 +1,3 @@
-//
-// Created by dalacroi on 22.11.2023.
-//
 #pragma once
 
 #ifndef TETRIS_FONTSHANDLER_H

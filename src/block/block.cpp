@@ -1,6 +1,3 @@
-//
-// Created by dalacroi on 21.11.2023.
-//
 #include "block.h"
 
 Block::Block()

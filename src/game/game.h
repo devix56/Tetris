@@ -1,7 +1,3 @@
-//
-// Created by dalacroi on 21.11.2023.
-//
-
 #pragma once
 
 #include "../grid/grid.h"

@@ -1,6 +1,3 @@
-//
-// Created by dan10 on 19.11.2023.
-//
 #include "raylib.h"
 #include "raymath.h"
 #include "game/game.h"
