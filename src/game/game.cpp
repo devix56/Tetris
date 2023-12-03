@@ -19,6 +19,7 @@ Game::Game(MusicHandler* musicHandler)
     nextBlock = GetRandomBlock();
     isGameOver = false;
     score = 0;
+    paused = false;
 
     this->musicHandler = musicHandler;
 }
@@ -56,6 +57,11 @@ void Game::HandleInput()
         case KEY_UP:
             RotateBlock();
             break;
+
+        case KEY_SPACE:
+            paused = !paused;
+            break;
+
         default:
             break;
     }
@@ -225,4 +231,9 @@ std::vector<Block> Game::GetAllBlocks() {
 Block& Game::GetNextBlock()
 {
     return nextBlock;
+}
+
+bool Game::isGamePaused() 
+{
+    return paused;
 }

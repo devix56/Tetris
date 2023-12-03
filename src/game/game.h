@@ -18,6 +18,7 @@ private:
     Block currentBlock, nextBlock;
     bool isGameOver;
     int score;
+    bool paused;
 
     // Resources
     MusicHandler* musicHandler;
@@ -47,10 +48,11 @@ public:
     bool IsBlockOutside();
     bool IsGameOver() const;
 
+
     // Getters & Setters
     Block GetRandomBlock();
     static std::vector<Block> GetAllBlocks();
     int GetScore() const;
-
     Block &GetNextBlock();
+    bool isGamePaused();
 };
